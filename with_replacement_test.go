@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func TestCacheR(t *testing.T) {
+func TestCacheRWithDifferentKeys(t *testing.T) {
 	key1, key2, key3, key4 := "key1", "key2", "key3", "key4"
 	val1, val2, val3, val4 := 1, 2, 3, 4
 
@@ -36,6 +36,27 @@ func TestCacheR(t *testing.T) {
 	got = cache.Get(key4).(int)
 	if val4 != got {
 		t.Fatalf("unexpected cache.Get - expected: %v, got: %v", val4, got)
+	}
+}
+
+func TestCacheRWithSameKeys(t *testing.T) {
+	key1, key2, key4 := "key1", "key2", "key4"
+	val1, val3 := 1, 3
+
+	cache := NewR(2)
+	cache.Set(key2, val1)
+	cache.Set(key1, val1)
+	cache.Set(key2, val3)
+	cache.Set(key4, val1)
+
+	got := cache.Get(key1)
+	if nil != got {
+		t.Fatalf("unexpected cache.Get - expected: %v, got: %v", nil, got)
+	}
+
+	got = cache.Get(key2)
+	if val3 != got {
+		t.Fatalf("unexpected cache.Get - expected: %v, got: %v", nil, got)
 	}
 }
 
